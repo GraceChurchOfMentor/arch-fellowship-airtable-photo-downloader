@@ -37,13 +37,16 @@ import convertImage from './inc/convert-image.js'
             limit(() =>
               downloader.downloadAttachment(attachment.url, attachment.filename, config.attachmentsDir, pb)
                 .then(() => {
-                  pb.update(100, { label: `${attachment.filename} downloaded, converting...` })
+                  return new Promise(resolve => {
+                    pb.update(0, { label: `${attachment.filename} downloaded, converting...` })
 
-                  convertImage.convert(`${config.attachmentsDir}/${attachment.filename}`, attachment.newFilename)
-                    .then(result => {
-                      pb.update(100, { label: `${attachment.filename} converted to ${attachment.newFilename}` })
-                      pb.stop()
-                    })
+                    convertImage.convert(`${config.attachmentsDir}/${attachment.filename}`, attachment.newFilename)
+                      .then(result => {
+                        pb.update(100, { label: `${attachment.filename} downloaded, converted to ${attachment.newFilename}` })
+                        pb.stop()
+                        resolve()
+                      })
+                  })
                 })
             )
           )

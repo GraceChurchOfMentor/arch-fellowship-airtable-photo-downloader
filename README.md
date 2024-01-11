@@ -37,6 +37,4 @@ The comments in the .env file should help you get set up. See the Airtable docs
 for more info on locating your API key and Base ID.
 
 ## Known Bugs
-1. *convert-image.js* does not return any result, and the progress bar UI does
-not acknowledge the conversion step. Thus, the script usually terminates before
-the progress bar registers completion of the last item.
+None currently.
