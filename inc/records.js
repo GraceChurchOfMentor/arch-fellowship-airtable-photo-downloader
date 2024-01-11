@@ -22,13 +22,14 @@ const records = {
 
           if (attachments) {
             const attachment = record.get(config.attachmentFieldName)[0];
-            const filename = record.get(config.newFilenameFieldName);
+            const newFilename = record.get(config.newFilenameFieldName);
 
             console.debug('  Retrieved record ' + c.white(record.getId()))
 
             output.push({
               filename: attachment.filename,
-              url: attachment.url
+              url: attachment.url,
+              newFilename
             })
           }
         })

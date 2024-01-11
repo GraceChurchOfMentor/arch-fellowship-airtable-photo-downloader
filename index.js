@@ -1,10 +1,11 @@
 import c from 'ansi-colors'
 import pLimit from 'p-limit'
 
-import configure from './inc/config.js'
-import downloader from './inc/downloader.js'
-import progressBar from './inc/progress-bar.js'
+import configure from './inc/configure.js'
 import records from './inc/records.js'
+import progressBar from './inc/progress-bar.js'
+import downloader from './inc/downloader.js'
+import convertImage from './inc/convert-image.js'
 
 (async () => {
   const config = configure()
@@ -27,16 +28,22 @@ import records from './inc/records.js'
     .then(attachments => {
       console.log(c.magenta('Downloading...'))
 
+      // download attachments
       attachments.forEach((attachment, index, array) => {
         setTimeout(() => {
-          const pb = multibar.create(100, 0, { filename: attachment.filename });
+          const pb = multibar.create(100, 0, { label: attachment.filename });
 
           promises.push(
             limit(() =>
               downloader.downloadAttachment(attachment.url, attachment.filename, config.attachmentsDir, pb)
                 .then(() => {
-                  pb.update(100, { filename: attachment.filename })
-                  pb.stop()
+                  pb.update(100, { label: `${attachment.filename} downloaded, converting...` })
+
+                  convertImage.convert(`${config.attachmentsDir}/${attachment.filename}`, attachment.newFilename)
+                    .then(result => {
+                      pb.update(100, { label: `${attachment.filename} converted to ${attachment.newFilename}` })
+                      pb.stop()
+                    })
                 })
             )
           )

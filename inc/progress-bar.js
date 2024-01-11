@@ -19,7 +19,7 @@ function barFormatter(options, params, payload) {
   const incompleteString = options.barIncompleteString.substr(0, incompleteLength)
 
   const bar = '  ' + c.green(completeString) + c.green(incompleteString)
-  const filename = c.cyan(payload.filename)
+  const label = c.cyan(payload.label)
   const separator = '  '
   const percent = (() => {
     if (params.value >= params.total) {
@@ -29,7 +29,7 @@ function barFormatter(options, params, payload) {
     }
   })()
 
-  return bar + percent + separator + filename
+  return bar + percent + separator + label
 }
 
 export default progressBar
